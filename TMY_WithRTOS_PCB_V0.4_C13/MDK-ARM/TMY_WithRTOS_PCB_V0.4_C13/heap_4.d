@@ -1,0 +1,13 @@
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: D:\SetUp\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: D:\SetUp\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: D:\SetUp\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Core/Inc/FreeRTOSConfig.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+.\tmy_withrtos_pcb_v0.4_c13\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

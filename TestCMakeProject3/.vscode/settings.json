@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "mathfunctions.h": "c",
+        "hampel_filter.h": "c",
+        "fft_math.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

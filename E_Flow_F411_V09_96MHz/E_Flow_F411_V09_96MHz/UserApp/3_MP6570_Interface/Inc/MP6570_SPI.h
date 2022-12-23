@@ -1,0 +1,12 @@
+#ifndef _MP6570_SPI_H_
+#define _MP6570_SPI_H_
+
+#include "stm32f4xx_hal.h"
+#include "gpio.h"
+
+#define NSS_SET 	HAL_GPIO_WritePin(MP6570_CS_GPIO_Port, MP6570_CS_Pin,GPIO_PIN_SET)
+#define NSS_RESET 	HAL_GPIO_WritePin(MP6570_CS_GPIO_Port, MP6570_CS_Pin,GPIO_PIN_RESET)
+
+void SPI_ByteWrite(unsigned char addr, unsigned char data1, unsigned char data2);	//	外部使用
+unsigned short SPI_ByteRead(unsigned char addr);									//	外部使用
+#endif

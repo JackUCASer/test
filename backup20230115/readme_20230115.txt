@@ -559,3 +559,24 @@ E_Flow_F411_V10:
 5. stm32f4xx_it.c // 增加程序
 
 
+---readMeBootloaderV2.txt
+2022-08-16:
+	E_Flow_F411制作记录：
+	1. 根据“E_Flow_F411_Boot.ioc”生成工程文件；
+	
+	2. 添加“UserApp”文件至工程中；
+	
+	3. 在"main.c"文件中添加函数：
+			Before_HAL_Init();
+			app_init2();
+			app_exec();
+			屏蔽//  MX_USB_DEVICE_Init();
+			
+	4. 修改USB驱动库文件（仅为文件夹《USB_DEVICE》下的文件）：
+			USB_DEVICE\App\usbd_storage_if.c，其他文件保持不动；具体修改内容参见本工程中usbd_storage_if.c文件
+			
+	5. 在“flash_if.c”第84行，有配置连续擦除扇区的设置，务必根据自己所需进行设置：
+			如本Boot中需要连续擦除4个扇区：user app:	224Kb,地址：0x08008000--0x0803FFFF
+			pEraseInit.NbSectors = N; 		//	擦除连续的N个扇区， 设置N = 4
+		
+		

@@ -1,0 +1,187 @@
+#include "Error.h"
+#include "datatype.h"
+#include "MenuData.h"
+#include "beep.h"
+#include "battery.h"
+#include "work_mode.h"
+#include "control.h"
+#include "customer_control.h"
+#include "macros.h"
+
+uint16_t HwFault_cnt=0;
+extern uint8_t LVGL_ON_OFF;
+extern unsigned int reciprocate_sw;					// 定义全局变量
+
+/**********************************************************************************************************
+*	函 数 名: void CheckLowBattery()
+*	功能说明: 运行过程中电量检测
+*	形    参: 无
+*	返 回 值: 无
+*	编 辑 者: 1：王昌盛
+*	修订记录: 运行中不检测低电量，只在待机时检测
+*	编辑日期: 1: 20211224         
+**********************************************************************************************************/
+uint8_t Battery_low_flag = 0;					//置1，低电压报警
+void CheckLowBattery()
+{
+    static uint8_t lowp_cnt = 0;
+    uint16_t BatVol_mv;
+    BatVol_mv = (ADC_ConvertedValue[0]*Ref_v)>>11;		//计算电池两端电压，mv
+    if(BatVol_mv < 3200)
+    {
+		if(ADC_ConvertedValue[0] > 100)					//出现电池电压采样异常，不累计
+		{
+			lowp_cnt++;
+		}
+        if(lowp_cnt > 50)			//累积次数
+        {
+            lowp_cnt = 0;
+//            sys.error = 1;
+//            sys.error_num = e_LowPower;
+			Battery_low_flag = 1;
+        }
+    }
+    else 
+	{
+		Battery_low_flag = 0;
+        lowp_cnt = 0;
+    }
+}
+/**********************************************************************************************************
+*	函 数 名: void CheckLowBattery()
+*	功能说明: 运行过程中电量检测
+*	形    参: 无
+*	返 回 值: 无
+*	编 辑 者: 1：王昌盛
+*	修订记录: 1
+*	编辑日期: 1: 20211224         
+**********************************************************************************************************/
+void OverCurentProtect()
+{
+    static	uint16_t over_cnt = 0,low_cnt = 0;
+	if((sel.OperaMode == 0)||(sel.OperaMode == 1)||(sel.OperaMode == 3))
+	{
+		if(motor_iq >= 350 || motor_iq <= -350)
+		{											//超过电流阀值
+			over_cnt++;
+			if(over_cnt >= 1000)
+			{
+				over_cnt = 1000;
+				low_cnt = 0;
+				sys.error = 1;
+				sys.error_num = e_OverCurrent;
+			}
+		}
+		else if((motor_iq <= 200) && (motor_iq >= -200))
+		{
+			low_cnt++;
+			if(low_cnt >= 300)
+			{
+				over_cnt = 0;
+				low_cnt = 300;
+			}
+		}
+	}else if(sel.OperaMode == 2)
+	{
+		if(motor_settings.mode == 0)
+		{	
+			/* 过流保护*/
+			if(motor_iq >= 350 || motor_iq <= -350)
+			{											//超过电流阀值
+				over_cnt++;
+				if(over_cnt >= 10000)
+				{
+					over_cnt = 10000;
+					low_cnt = 0;
+					sys.error = 1;
+					sys.error_num = e_OverCurrent;
+				}
+			}
+			else if((motor_iq <= 200) && (motor_iq >= -200))
+			{
+				low_cnt++;
+				if(low_cnt >= 300)
+				{
+					over_cnt = 0;
+					low_cnt = 300;
+				}
+			}
+		}else if(motor_settings.mode == 1)
+		{
+			/* 过流保护*/
+			if(motor_iq >= 370 || motor_iq <= -370)
+			{											//超过电流阀值
+				over_cnt++;
+				if(over_cnt >= 150)
+				{
+					over_cnt = 150;
+					low_cnt = 0;
+					stop();
+					reciprocate_sw = 1;
+				}
+			}
+			else if((motor_iq <= 280) && (motor_iq >= -280))
+			{
+				low_cnt++;
+				if(low_cnt >= 50)
+				{
+					over_cnt = 0;
+					low_cnt = 50;
+				}
+			}
+		}
+	}
+}
+
+/**********************************************************************************************************
+*	函 数 名: WorkMode_e  CheckHardwareFault(WorkMode_e  mode)
+*	功能说明: 运行过程中电量检测
+*	形    参: 无
+*	返 回 值: 无
+*	编 辑 者: 1：王昌盛
+*	修订记录: 1
+*	编辑日期: 1: 20211224         
+**********************************************************************************************************/
+WorkMode_e  CheckHardwareFault(WorkMode_e  mode)
+{
+//    CheckLowBattery();							//检测运行中电池电压是否过低
+    OverCurentProtect();						//检测电流是否过大
+
+    if(sys.error == 1)
+	{											//发生错误，进入故障模式
+        mode = Fault_mode;
+        ApexRing(0,0);
+        Ring.long_ring = 1;
+		LVGL_ON_OFF = 1;
+    }
+    return mode;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
